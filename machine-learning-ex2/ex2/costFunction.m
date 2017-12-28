@@ -19,12 +19,12 @@ grad = zeros(size(theta));
 %
 % Note: grad should have the same dimensions as theta
 %
+J = sum(-y.*log(sigmoid(X*theta))-(1-y).*log(1-(sigmoid(X*theta))))/m
 
+% grad is the partical derivatives of J on theta(j), the length of grad is the 
+% same as theta
 
-
-
-
-
+grad = X'*(sigmoid(X*theta)-y)/m
 
 
 % =============================================================
