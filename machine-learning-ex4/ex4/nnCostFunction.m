@@ -97,7 +97,7 @@ for t=1:m
   a_3 = sigmoid(z_3);        %a_3 is 10*1
   
   delta_3 = a_3-y_trans(t,:)'; %delta_3 is 10*1
-  %delta_2 = Theta2'*delta_3.*sigmoidGradient(z_2); %Attention! cannot sigmoidGradient Here
+  %delta_2 = Theta2'*delta_3.*sigmoidGradient(z_2); %Attention! cannot use sigmoidGradient Here
   delta_2 = Theta2'*delta_3.*(a_2.*(1-a_2));  %delta_2 is 26*1
   delta_2 = delta_2(2:end);    %delta_2 is 25*1
   
