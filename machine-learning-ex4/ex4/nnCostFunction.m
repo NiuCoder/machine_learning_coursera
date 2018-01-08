@@ -62,50 +62,54 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
-X_trans = [ones(m,1) X]
-y_trans = zeros(m,num_labels)
+X_trans = [ones(m,1) X];
+y_trans = zeros(m,num_labels);
 for i=1:m
-  y_trans(i,y(i))=1
+  y_trans(i,y(i))=1;
 end
 
-a1 = X_trans'   %a1 is 401*5000
-a2 = sigmoid(Theta1*a1)   %a2 is 25* 5000
-a2 = [ones(1,m);a2]   %a2 is 26*5000
-a3 = sigmoid(Theta2*a2) %a3 is 10*5000
+a1 = X_trans';   %a1 is 401*5000
+a2 = sigmoid(Theta1*a1);   %a2 is 25* 5000
+a2 = [ones(1,m);a2];   %a2 is 26*5000
+a3 = sigmoid(Theta2*a2); %a3 is 10*5000
 
 % Another way
 %a2 = sigmoid(X_trans*Theta1')
 %a2 = [ones(m,1) a2]
 %a3 = sigmoid(a2*Theta2')
 
-Theta1_without_bias = Theta1(:,2:(input_layer_size + 1))
-Theta2_without_bias = Theta2(:,2:(hidden_layer_size + 1))
+Theta1_without_bias = Theta1(:,2:(input_layer_size + 1));
+Theta2_without_bias = Theta2(:,2:(hidden_layer_size + 1));
 
 J = sum(sum(-y_trans'.*log(a3)-(1-y_trans').*log(1-a3)))/m...
-  + (sum(sum(Theta1_without_bias.^2))+sum(sum(Theta2_without_bias.^2)))*lambda/(2*m)
+  + (sum(sum(Theta1_without_bias.^2))...
+    + sum(sum(Theta2_without_bias.^2)))*lambda/(2*m);
 
 % compute the grad
-Delta_1 = zeros(size(Theta1))  %Delta_1 is 25*401
-Delta_2 = zeros(size(Theta2))  %Delta_2 is 10*26
+Delta_1 = zeros(size(Theta1));  %Delta_1 is 25*401
+Delta_2 = zeros(size(Theta2));  %Delta_2 is 10*26
 for t=1:m
-  a_1 = X_trans(t,:)'       %a_1 is 401*1
-  a_2 = sigmoid(Theta1*a_1) %a_2 is 25*1
-  a_2 = [1;a_2]             %a_2 is 26*1
-  a_3 = sigmoid(Theta2*a_2) %a_3 is 10*1
+  a_1 = X_trans(t,:)';       %a_1 is 401*1
+  z_2 = Theta1*a_1;          %z_2 is 25*1
+  a_2 = sigmoid(z_2);        %a_2 is 25*1
+  a_2 = [1;a_2];             %a_2 is 26*1
+  z_3 = Theta2*a_2;          %z_3 is 10*1
+  a_3 = sigmoid(z_3);        %a_3 is 10*1
   
-  delta_3 = a_3-y_trans(t,:)' %delta_3 is 10*1
-  delta_2 = Theta2'*delta_3.*sigmoidGradient(a_2) %delta_2 is 26*1 
-  delta_2 = delta_2(2:end)    %delta_2 is 25*1
+  delta_3 = a_3-y_trans(t,:)'; %delta_3 is 10*1
+  %delta_2 = Theta2'*delta_3.*sigmoidGradient(z_2); %Attention! cannot sigmoidGradient Here
+  delta_2 = Theta2'*delta_3.*(a_2.*(1-a_2));  %delta_2 is 26*1
+  delta_2 = delta_2(2:end);    %delta_2 is 25*1
   
-  Delta_1 = Delta_1+delta_2*a_1'  %Delta_1 is 25*401
-  Delta_2 = Delta_2+delta_3*a_2'  %Delta_2 is 10*26
+  Delta_1 = Delta_1+delta_2*a_1';  %Delta_1 is 25*401
+  Delta_2 = Delta_2+delta_3*a_2';  %Delta_2 is 10*26
 end
 
-Theta1_grad = Delta_1/m     %without regularization
-Theta2_grad = Delta_2/m     %without regularization
+Theta1_grad = Delta_1/m;     %without regularization
+Theta2_grad = Delta_2/m;     %without regularization
 
-Theta1_grad(:,2:end)=Theta1_grad(:,2:end)+lambda*Theta1(:,2:end)/m
-Theta2_grad(:,2:end)=Theta2_grad(:,2:end)+lambda*Theta2(:,2:end)/m
+Theta1_grad(:,2:end)=Theta1_grad(:,2:end)+lambda*Theta1(:,2:end)/m;
+Theta2_grad(:,2:end)=Theta2_grad(:,2:end)+lambda*Theta2(:,2:end)/m;
 
 % -------------------------------------------------------------
 
