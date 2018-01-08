@@ -66,7 +66,7 @@ X_trans = [ones(m,1) X]
 y_trans = zeros(m,num_labels)
 for i=1:m
   y_trans(i,y(i))=1
-endfor
+end
 
 a1 = X_trans'   %a1 is 401*5000
 a2 = sigmoid(Theta1*a1)   %a2 is 25* 5000
@@ -99,7 +99,7 @@ for t=1:m
   
   Delta_1 = Delta_1+delta_2*a_1'  %Delta_1 is 25*401
   Delta_2 = Delta_2+delta_3*a_2'  %Delta_2 is 10*26
-endfor
+end
 
 Theta1_grad = Delta_1/m     %without regularization
 Theta2_grad = Delta_2/m     %without regularization
