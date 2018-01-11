@@ -105,10 +105,7 @@ pause;
 %
 
 lambda = 0;
-[error_train, error_val] = ...
-    learningCurve([ones(m, 1) X], y, ...
-                  [ones(size(Xval, 1), 1) Xval], yval, ...
-                  lambda);
+
 
 plot(1:m, error_train, 1:m, error_val);
 title('Learning curve for linear regression')
